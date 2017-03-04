@@ -1,0 +1,986 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="ASP.NET MVC," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="FEDT" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="MVC-ViewBag一个控制器可以使用ViewBag对象来将数据或对象传递到视图模板中。ViewBag是一个动态对象，它提供了一种便利的，后期绑定的方法来将信息从控制器传递到视图中。你可以为它添加任何属性并赋上属性值。在未赋值之前该属性是不生效的，直到你赋值为止。例如：  
+123456public ActionResult Welcome(string name, int numTimes =">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ASP.NET MVC摸索">
+<meta property="og:url" content="http://fedt.coding.me/2016/05/09/ASP.NET MVC/index.html">
+<meta property="og:site_name" content="FEDT">
+<meta property="og:description" content="MVC-ViewBag一个控制器可以使用ViewBag对象来将数据或对象传递到视图模板中。ViewBag是一个动态对象，它提供了一种便利的，后期绑定的方法来将信息从控制器传递到视图中。你可以为它添加任何属性并赋上属性值。在未赋值之前该属性是不生效的，直到你赋值为止。例如：  
+123456public ActionResult Welcome(string name, int numTimes =">
+<meta property="og:image" content="http://i.imgur.com/GIv73hk.png">
+<meta property="og:image" content="http://i.imgur.com/66PeL4y.png">
+<meta property="og:updated_time" content="2016-05-21T15:30:42.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ASP.NET MVC摸索">
+<meta name="twitter:description" content="MVC-ViewBag一个控制器可以使用ViewBag对象来将数据或对象传递到视图模板中。ViewBag是一个动态对象，它提供了一种便利的，后期绑定的方法来将信息从控制器传递到视图中。你可以为它添加任何属性并赋上属性值。在未赋值之前该属性是不生效的，直到你赋值为止。例如：  
+123456public ActionResult Welcome(string name, int numTimes =">
+<meta name="twitter:image" content="http://i.imgur.com/GIv73hk.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 6259690702712604000,
+      author: '<i class="fa fa-vimeo"></i>'
+    }
+  };
+</script>
+
+  <title> ASP.NET MVC摸索 | FEDT </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?8f2986b20874420c3c5287985ba26855";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">FEDT</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">Front End Developer A-Ten's Blog</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-guestbook">
+          <a href="/guestbook" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-comments"></i> <br />
+            
+            留言
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                ASP.NET MVC摸索
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-05-09T00:00:00+08:00" content="2016-05-09">
+              2016-05-09
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/笔记整理/" itemprop="url" rel="index">
+                    <span itemprop="name">笔记整理</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/05/09/ASP.NET MVC/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/09/ASP.NET MVC/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2016/05/09/ASP.NET MVC/" class="leancloud_visitors" data-flag-title="ASP.NET MVC摸索">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="MVC-ViewBag"><a href="#MVC-ViewBag" class="headerlink" title="MVC-ViewBag"></a>MVC-ViewBag</h2><p>一个控制器可以使用ViewBag对象来将数据或对象传递到视图模板中。ViewBag是一个<strong>动态对象</strong>，它提供了一种便利的，后期绑定的方法来<strong>将信息从控制器传递到视图</strong>中。你可以为它添加任何属性并赋上属性值。在未赋值之前该属性是不生效的，直到你赋值为止。例如：  </p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> ActionResult <span class="title">Welcome</span>(<span class="params"><span class="keyword">string</span> name, <span class="keyword">int</span> numTimes = <span class="number">1</span></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            ViewBag.Message = <span class="string">"Hello "</span> + name;</span><br><span class="line">            ViewBag.NumTimes = numTimes;</span><br><span class="line">            <span class="keyword">return</span> View();</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+<p>ViewBag对象中已经包含了数据，它将被自动传递给视图。</p>
+<a id="more"></a>
+<h2 id="MVC-控制器向View传值的三种方法"><a href="#MVC-控制器向View传值的三种方法" class="headerlink" title="MVC 控制器向View传值的三种方法"></a>MVC 控制器向View传值的三种方法</h2><ol>
+<li><p><strong>提供视图模型对象</strong>  </p>
+<ul>
+<li><p>你能把一个对象作为View方法的参数传递给视图.  </p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> ViewResult <span class="title">Index</span>(<span class="params"></span>)  </span><br><span class="line"></span>&#123;  </span><br><span class="line">DateTime date = DateTime.Now;  </span><br><span class="line"><span class="keyword">return</span> View(date);  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>然后我们在视图中使用Razor的Model关键字来访问这个对象   </p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">@&#123;  </span><br><span class="line">ViewBag.Title = <span class="string">"Index"</span>;  </span><br><span class="line">&#125;  </span><br><span class="line">&lt;h2&gt;Index&lt;/h2&gt;  </span><br><span class="line">The day <span class="keyword">is</span>: @(((DateTime)Model).DayOfWeek)   </span><br><span class="line">``` </span><br><span class="line">或者是  </span><br><span class="line">```cs</span><br><span class="line">@model DateTime    </span><br><span class="line">@&#123;  </span><br><span class="line">ViewBag.Title = <span class="string">"Index"</span>;  </span><br><span class="line">&#125;    </span><br><span class="line">&lt;h2&gt;Index&lt;/h2&gt;  </span><br><span class="line">The day <span class="keyword">is</span>: @Model.DayOfWeek </span><br><span class="line">``` </span><br><span class="line"></span><br><span class="line"><span class="number">2.</span> **使用ViewBag(视图包)传递数据**  </span><br><span class="line">	* View  Bag 允许在一个动态的对象上定义任意属性,并在视图中访问它.这个动态的对象可以通过Controller.ViewBag属性访问它.  </span><br><span class="line">```<span class="function">cs</span><br><span class="line"><span class="keyword">public</span> ViewResult <span class="title">Index</span>(<span class="params"></span>)    </span><br><span class="line"></span>&#123;    </span><br><span class="line">    ViewBag.Message = <span class="string">"Hello"</span>;    </span><br><span class="line">    ViewBag.Date = DateTime.Now;    </span><br><span class="line">    <span class="keyword">return</span> View();    </span><br><span class="line">&#125;    </span><br><span class="line">  </span><br><span class="line">@&#123;</span><br><span class="line">	ViewBag.Title = <span class="string">"Index"</span>;    </span><br><span class="line">&#125;    </span><br><span class="line">&lt;h&gt;Index&lt;/h&gt;    </span><br><span class="line">The day <span class="keyword">is</span>: @ViewBag.Date.DayOfWeek    </span><br><span class="line">&lt;p /&gt;  </span><br><span class="line">The message <span class="keyword">is</span>: @ViewBag.Message</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p><strong>使用View Data传递数据</strong>  </p>
+<ul>
+<li>在MVC3.0之前,主要是通过这种方式传递数据,它是通过用 ViewDataDictionary类实现的,而不是动态的对象.ViewDataDictionary类是类似标准”键/值”集合,并通过Controller类的ViewData属性进行访问的.这个方法,在视图中需要对对象进行转换.<br><em>控制器中:</em> <figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">	<span class="function"><span class="keyword">public</span> ViewResult <span class="title">Index</span>(<span class="params"></span>)    </span><br><span class="line"> </span>&#123;    </span><br><span class="line">    ViewData[<span class="string">"Message"</span>] = <span class="string">"Hello"</span>;    </span><br><span class="line">    ViewData[<span class="string">"Date"</span>] = DateTime.Now;    </span><br><span class="line">    <span class="keyword">return</span> View();    </span><br><span class="line"> &#125;    </span><br><span class="line"></span><br><span class="line">   ```  </span><br><span class="line">*视图中:*  </span><br><span class="line"></span><br><span class="line">```cs</span><br><span class="line">	 @&#123;   </span><br><span class="line">	 ViewBag.Title = <span class="string">"Index"</span>;  </span><br><span class="line">	 &#125;    </span><br><span class="line">	 &lt;h2&gt;Index&lt;/h2&gt;    </span><br><span class="line">	 The day <span class="keyword">is</span>: @(((DateTime)ViewData[<span class="string">"Date"</span>]).DayOfWeek)    </span><br><span class="line">	 &lt;p /&gt;    </span><br><span class="line">	 The message <span class="keyword">is</span>: @ViewData[<span class="string">"Message"</span>]</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ol>
+<h2 id="ASP-NET-MVC中form提交和控制器接受form提交过来的数据"><a href="#ASP-NET-MVC中form提交和控制器接受form提交过来的数据" class="headerlink" title="ASP.NET MVC中form提交和控制器接受form提交过来的数据"></a>ASP.NET MVC中form提交和控制器接受form提交过来的数据</h2><ol>
+<li><strong>cshtml页面form提交</strong><br><img src="http://i.imgur.com/GIv73hk.png" alt="">  </li>
+<li><strong>控制器处理表单提交数据4种方式</strong>  </li>
+</ol>
+<p>方法1:使用传统的Request请求取值<br><figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[HttpPost]</span><br><span class="line"><span class="function"><span class="keyword">public</span> ActionResult <span class="title">AddNews</span>(<span class="params"></span>)</span><br><span class="line"></span>&#123;</span><br><span class="line"><span class="keyword">string</span> a=Request[<span class="string">"text1"</span>];</span><br><span class="line"><span class="keyword">string</span> b=Request[<span class="string">"text2"</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>方法2:Action参数名与表单元素name值一一对应<br><figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[HttpPost]</span><br><span class="line"><span class="function"><span class="keyword">public</span> ActionResult <span class="title">AddNews</span>(<span class="params"><span class="keyword">string</span> text1,<span class="keyword">string</span> text2</span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">string</span> a=text1;</span><br><span class="line">    <span class="keyword">string</span> b=text2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>方法3:从MVC封装的FormCollection容器中读取<br><figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[HttpPost]</span><br><span class="line"><span class="function"><span class="keyword">public</span> ActionResult <span class="title">AddNews</span>(<span class="params">FormCollection form</span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">string</span> a=form[<span class="string">"text1"</span>];</span><br><span class="line">    <span class="keyword">string</span> b=form[<span class="string">"text2"</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>方法4:使用实体作为Action参数传入，前提是提交的表单元素名称与实体属性名称一一对应<br><figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[HttpPost]</span><br><span class="line"><span class="function"><span class="keyword">public</span> ActionResult <span class="title">AddNews</span>(<span class="params">userModel user</span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">string</span> a=user.text1;</span><br><span class="line">    <span class="keyword">string</span> b=user.text2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="ASP-NET-MVC-中的ViewData与ViewBag"><a href="#ASP-NET-MVC-中的ViewData与ViewBag" class="headerlink" title="ASP.NET MVC 中的ViewData与ViewBag"></a>ASP.NET MVC 中的ViewData与ViewBag</h2><blockquote>
+<p>Asp.net MVC默认使用 Web Form来作为View，新建的aspx页面均是继承于ViewPage。而ViewData和ViewBag都是ViewPage的属性。ViewPage.ViewData表示获取或设置一个字典，其中包含在控制器和视图时间传递的数据，也就是说ViewPage.ViewData是控制器Controller和视图View之间沟通传递数据的桥梁。而ViewPage.ViewBag则表示获取一个视图包。</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>i</th>
+<th>类型和作用</th>
+<th>引入时间</th>
+<th>版本</th>
+<th>查询速度</th>
+<th>是否需要类型转换</th>
+<th>可读性</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ViewData</td>
+<td>字典类型（Key和Value的合）是 Controller和View之间传递数据的桥梁</td>
+<td>ASP.NETMVC 1.0引入</td>
+<td>基于.Net Framework 3.5</td>
+<td>ViewData查询速度比ViewBag快</td>
+<td>在ViewPage中查询数据时需要进行类型转换</td>
+<td>可读性相对要差点</td>
+</tr>
+<tr>
+<td>ViewBag</td>
+<td>dynamic类型</td>
+<td>ASP.NET MVC 3.0引入</td>
+<td>基于.Net Framework 4.0</td>
+<td>查询速度比ViewData慢</td>
+<td>在ViewPage中查询数据时不需要进行类型转换</td>
+<td>可读性更好</td>
+</tr>
+</tbody>
+</table>
+<h2 id="MVC3中PartialView-与View-的区别"><a href="#MVC3中PartialView-与View-的区别" class="headerlink" title="MVC3中PartialView()与View()的区别"></a>MVC3中PartialView()与View()的区别</h2><p>当我们使用razor作为页面引擎时，它的视图文件扩展名为cshtml或者vbshtml，而之前作为分部视图的ascx文件，进行razor之后，也是cshtml，这与非razor引擎有些不同，在这方面，官方并没有显式把分部视图与标准视图分开，有时，我们在开发时，可能会出现一些混乱了，今天主要来说一下，如何正确的使用分部视图！</p>
+<p><strong>分部视图</strong>在action中返回一定要用<code>PartialView()</code>，而不要偷懒使用<code>View()</code>，因为，如果你使用View()渲染视图，系统会认为你是一个标准视图，会为你加个默认的母板页（Layout)，除非你显式的设置了Layout这个属性。</p>
+<p><img src="http://i.imgur.com/66PeL4y.png" alt="layout=null"></p>
+<p>之前的程序代码：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>  　　　 <span class="function"><span class="keyword">public</span> ActionResult <span class="title">PartialLogon</span>(<span class="params"></span>)</span><br><span class="line">2         </span>&#123;</span><br><span class="line"><span class="number">3</span>             <span class="keyword">return</span> View();<span class="comment">//会认识它的标准视图，所以会加上默认的Layout</span></span><br><span class="line"><span class="number">4</span>         &#125;</span><br></pre></td></tr></table></figure>
+<p>当返回视图后，你的分部视图会被加上默认的母板页，这不是我们希望看到的，当然有些同学会不先麻烦的在页面上显式的加上Layout=null</p>
+<p>事实上，如果你正确的返回分部视图，这行当然是不用加的。</p>
+<p>正确的写法：<br><figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> ActionResult <span class="title">PartialLogon</span>(<span class="params"></span>)</span><br><span class="line">   </span>&#123;</span><br><span class="line">       <span class="keyword">return</span> PartialView();<span class="comment">//会将页面的Layout自动设为null</span></span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<p>我想这后我们把这两个东西换个名称：</p>
+<ul>
+<li>PartialView()=&gt;渲染视图=&gt;不带Layout</li>
+<li>View()=&gt;渲染分部视图=&gt;自动加上Layout</li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ASP-NET-MVC/" rel="tag">#ASP.NET MVC</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/05/01/hello-world/" rel="next" title="Hello World">
+                <i class="fa fa-chevron-left"></i> Hello World
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/05/10/JavaScriptWiki/" rel="prev" title="JavaScript杂记(RAF,Selection,Scroll)">
+                JavaScript杂记(RAF,Selection,Scroll) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2016/05/09/ASP.NET MVC/"
+     data-title="ASP.NET MVC摸索"
+     data-content=""
+     data-url="http://fedt.coding.me/2016/05/09/ASP.NET MVC/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/05/09/ASP.NET MVC/"
+           data-title="ASP.NET MVC摸索" data-url="http://fedt.coding.me/2016/05/09/ASP.NET MVC/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/logo.jpg"
+               alt="A-Ten" />
+          <p class="site-author-name" itemprop="name">A-Ten</p>
+          <p class="site-description motion-element" itemprop="description">带着孤寂，继续前进！</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">12</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/dota2mm/" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/ForKhazModan/" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.deanhan.cn/" title="逐梦博客" target="_blank" rel="external">逐梦博客</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.longestory.com/" title="龙哥博客" target="_blank" rel="external">龙哥博客</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#MVC-ViewBag"><span class="nav-number">1.</span> <span class="nav-text">MVC-ViewBag</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MVC-控制器向View传值的三种方法"><span class="nav-number">2.</span> <span class="nav-text">MVC 控制器向View传值的三种方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ASP-NET-MVC中form提交和控制器接受form提交过来的数据"><span class="nav-number">3.</span> <span class="nav-text">ASP.NET MVC中form提交和控制器接受form提交过来的数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ASP-NET-MVC-中的ViewData与ViewBag"><span class="nav-number">4.</span> <span class="nav-text">ASP.NET MVC 中的ViewData与ViewBag</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MVC3中PartialView-与View-的区别"><span class="nav-number">5.</span> <span class="nav-text">MVC3中PartialView()与View()的区别</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">A-Ten</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io" rel="external nofollow">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next" rel="external nofollow">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"fedt"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+      
+      <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+      <script src="/js/src/hook-duoshuo.js"></script>
+    
+  
+
+
+
+
+
+  
+  
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("4MUwWEGSYrnEix3z2S1XYe0D-gzGzoHsz", "joF9PNzXdE9OEUFRAQfJMqtO");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script type="text/javascript" async src="//push.zhanzhang.baidu.com/push.js">
+</script>
+
+
+</body>
+<script type="text/javascript">
+    (function(window,document,undefined){
+        var hearts = [];
+        window.requestAnimationFrame = (function(){
+                return window.requestAnimationFrame || 
+                           window.webkitRequestAnimationFrame ||
+                           window.mozRequestAnimationFrame ||
+                           window.oRequestAnimationFrame ||
+                           window.msRequestAnimationFrame ||
+                           function (callback){
+                                   setTimeout(callback,1000/60);
+                           }
+        })();
+        init();
+        function init(){
+                css(".heart{width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: fixed;}.heart:after{top: -5px;}.heart:before{left: -5px;}");
+                attachEvent();
+                gameloop();
+        }
+        function gameloop(){
+                for(var i=0;i<hearts.length;i++){
+                    if(hearts[i].alpha <=0){
+                            document.body.removeChild(hearts[i].el);
+                            hearts.splice(i,1);
+                            continue;
+                    }
+                    hearts[i].y--;
+                    hearts[i].scale += 0.004;
+                    hearts[i].alpha -= 0.013;
+                    hearts[i].el.style.cssText = "left:"+hearts[i].x+"px;top:"+hearts[i].y+"px;opacity:"+hearts[i].alpha+";transform:scale("+hearts[i].scale+","+hearts[i].scale+") rotate(45deg);background:"+hearts[i].color+";z-index:99999";
+            }
+            requestAnimationFrame(gameloop);
+        }
+        function attachEvent(){
+                var old = typeof window.onclick==="function" && window.onclick;
+                window.onclick = function(event){
+                        old && old();
+                        createHeart(event);
+                }
+        }
+        function createHeart(event){
+            var d = document.createElement("div");
+            d.className = "heart";
+            hearts.push({
+                    el : d,
+                    x : event.clientX - 5,
+                    y : event.clientY - 5,
+                    scale : 1,
+                    alpha : 1,
+                    color : randomColor()
+            });
+            document.body.appendChild(d);
+    }
+    function css(css){
+            var style = document.createElement("style");
+                style.type="text/css";
+                try{
+                    style.appendChild(document.createTextNode(css));
+                }catch(ex){
+                    style.styleSheet.cssText = css;
+                }
+                document.getElementsByTagName('head')[0].appendChild(style);
+    }
+        function randomColor(){
+                return "rgb("+(~~(Math.random()*255))+","+(~~(Math.random()*255))+","+(~~(Math.random()*255))+")";
+        }
+})(window,document);
+</script>
+</html>
