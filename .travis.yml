@@ -28,3 +28,6 @@ branches:
 env:
  global:
    - GH_REF: github.com/DOTA2mm/dota2mm.github.io.git
+cache:
+  directories:
+    - node_modules
