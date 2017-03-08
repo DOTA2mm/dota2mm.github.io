@@ -96,7 +96,7 @@
 A">
 <meta property="og:type" content="article">
 <meta property="og:title" content="AvalonJS系列01之快速入门">
-<meta property="og:url" content="http://fedt.coding.me/2016/05/22/AvalonJS01/index.html">
+<meta property="og:url" content="http://pages.fedt.xin/2016/05/22/AvalonJS01/index.html">
 <meta property="og:site_name" content="FEDT">
 <meta property="og:description" content="关于AvalonJSAvalonJS简介avalon是一个简单易用迷你的MVVM框架，为解决同一业务逻辑存在各种视图呈现而开发出来的。MVVM将所有前端代码彻底分成两部分，视图的处理通过绑定实现（angular中叫指令）， 业务逻辑则集中在一个个叫VM的对象中处理。我们只要操作VM的数据，它就自然而然地神奇地同步到视图。avalon的所有指令都是以ms-*命名。跟MicroSoft并没有关系。
 A">
@@ -386,7 +386,7 @@ A">
 <h3 id="绑定"><a href="#绑定" class="headerlink" title="绑定"></a>绑定</h3><p>avalon的绑定（或指令），拥有以下三种类型：</p>
 <ul>
 <li><code>{ { } }</code>插值表达式， 这是开标签与闭标签间，换言之，也是位于<strong>文本节点</strong>中，<code>innerText</code>里。<code>{ { } }</code>里面可以添加各种过滤器（以|进行标识）。值得注意的是<code>{ { } }</code>实际是文本绑定(<code>ms-text</code>)的一种形式。</li>
-<li><p>ms-*绑定属性， 这是位于开标签的内部， 95%的绑定都以这种形式存在。 它们的格式大概是这样划分的 <code>&quot;ms&quot; + type + &quot;-&quot; + param1 + &quot;-&quot; + param1 + &quot;-&quot; + param2 + ... + number = value</code>。关于绑定属性指令将在<a href="http://fedt.coding.me/AvalonJS02/">下一篇</a>中详细说到。</p>
+<li><p>ms-*绑定属性， 这是位于开标签的内部， 95%的绑定都以这种形式存在。 它们的格式大概是这样划分的 <code>&quot;ms&quot; + type + &quot;-&quot; + param1 + &quot;-&quot; + param1 + &quot;-&quot; + param2 + ... + number = value</code>。关于绑定属性指令将在<a href="http://pages.fedt.xin/AvalonJS02/">下一篇</a>中详细说到。</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">ms-skip                <span class="comment">//这个绑定属性没有值</span></span><br><span class="line">ms-controller=<span class="string">"expr"</span>   <span class="comment">//这个绑定属性没有参数</span></span><br><span class="line">ms-<span class="keyword">if</span>=<span class="string">"expr"</span>           <span class="comment">//这个绑定属性没有参数</span></span><br><span class="line">ms-<span class="keyword">if</span>-loop=<span class="string">"expr"</span>       <span class="comment">//这个绑定属性有一个参数</span></span><br><span class="line">ms-repeat-el=<span class="string">"array"</span>    <span class="comment">//这个绑定属性有一个参数</span></span><br><span class="line">ms-attr-href=<span class="string">"xxxx"</span>    <span class="comment">//这个绑定属性有一个参数</span></span><br><span class="line">ms-attr-src=<span class="string">"xxx/&#123;&#123;a&#125;&#125;/yyy/&#123;&#123;b&#125;&#125;"</span>   <span class="comment">//这个绑定属性的值包含插值表达式，注意只有少部分表示字符串类型的属性可以使用插值表达式</span></span><br><span class="line">ms-click<span class="number">-1</span>=<span class="string">"fn"</span>       <span class="comment">//这个绑定属性的名字最后有数字，这是方便我们绑定更多点击事件 ms-click-2="fn"  ms-click-3="fn"  </span></span><br><span class="line">ms-on-click=<span class="string">"fn"</span>     <span class="comment">//只有表示事件与类名的绑定属性的可以加数字，如这个也可以写成  ms-on-click-0="fn"    </span></span><br><span class="line">ms-<span class="class"><span class="keyword">class</span>-1</span>=<span class="string">"xxx"</span> ms-<span class="class"><span class="keyword">class</span>-2</span>=<span class="string">"yyy"</span> ms-<span class="class"><span class="keyword">class</span>-3</span>=<span class="string">"xxx"</span> <span class="comment">//数字还表示绑定的次序</span></span><br><span class="line">ms-css-background-color=<span class="string">"xxx"</span> <span class="comment">//这个绑定属性有两个参数，但在css绑定里，相当于一个，会内部转换为backgroundColor </span></span><br><span class="line">ms-duplex-aaa-bbb-string=<span class="string">"xxx"</span><span class="comment">//这个绑定属性有三个参数，表示三种不同的拦截操作</span></span><br></pre></td></tr></table></figure>
 </li>
 <li><p><code>data-xxx-yyy=&quot;xxx&quot;</code>，辅助指令，比如ms-duplex的某一个辅助指令为<code>data-duplex-event=&quot;change&quot;</code>，<code>ms-repeat</code>的某一个辅助指令为<code>data-repeat-rendered=&quot;yyy&quot;</code></p>
@@ -452,7 +452,7 @@ A">
         <div class="ds-share flat" data-thread-key="2016/05/22/AvalonJS01/"
      data-title="AvalonJS系列01之快速入门"
      data-content=""
-     data-url="http://fedt.coding.me/2016/05/22/AvalonJS01/">
+     data-url="http://pages.fedt.xin/2016/05/22/AvalonJS01/">
   <div class="ds-share-inline">
     <ul  class="ds-share-icons-16">
 
@@ -483,7 +483,7 @@ A">
   <div class="comments" id="comments">
     
       <div class="ds-thread" data-thread-key="2016/05/22/AvalonJS01/"
-           data-title="AvalonJS系列01之快速入门" data-url="http://fedt.coding.me/2016/05/22/AvalonJS01/">
+           data-title="AvalonJS系列01之快速入门" data-url="http://pages.fedt.xin/2016/05/22/AvalonJS01/">
       </div>
     
   </div>

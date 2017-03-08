@@ -169,7 +169,7 @@ var model : avalon.define({
 avalon的绑定（或指令），拥有以下三种类型：
 
 - `{ { } }`插值表达式， 这是开标签与闭标签间，换言之，也是位于**文本节点**中，`innerText`里。`{ { } }`里面可以添加各种过滤器（以|进行标识）。值得注意的是`{ { } }`实际是文本绑定(`ms-text`)的一种形式。
-- ms-*绑定属性， 这是位于开标签的内部， 95%的绑定都以这种形式存在。 它们的格式大概是这样划分的 ` "ms" + type + "-" + param1 + "-" + param1 + "-" + param2 + ... + number = value`。关于绑定属性指令将在[下一篇](http://fedt.coding.me/AvalonJS02/)中详细说到。
+- ms-*绑定属性， 这是位于开标签的内部， 95%的绑定都以这种形式存在。 它们的格式大概是这样划分的 ` "ms" + type + "-" + param1 + "-" + param1 + "-" + param2 + ... + number = value`。关于绑定属性指令将在[下一篇](http://pages.fedt.xin/AvalonJS02/)中详细说到。
 ```javascript
 ms-skip                //这个绑定属性没有值
 ms-controller="expr"   //这个绑定属性没有参数
