@@ -77,7 +77,7 @@ deploy:
 # 多说评论框
 duoshuo_shortname: "fedt"
 duoshuo_share: true
-duoshuo_hotartical: true
+duoshuo_hotartical: false
 
 #avatar
 avatar: /images/logo.jpg
