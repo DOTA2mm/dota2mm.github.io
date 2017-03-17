@@ -2,7 +2,7 @@
 title: Git工具学习笔记
 date: 2016/12/02 
 categories:
-- 学习笔记
+- 笔记整理
 tags:
 - Github
 - Git
