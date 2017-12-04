@@ -75,9 +75,9 @@ deploy:
   #branch: master
 
 # 多说评论框
-duoshuo_shortname: "fedt"
-duoshuo_share: false
-duoshuo_hotartical: false
+# duoshuo_shortname: "fedt"
+# duoshuo_share: false
+# duoshuo_hotartical: false
 
 #avatar
 avatar: /images/logo.jpg
