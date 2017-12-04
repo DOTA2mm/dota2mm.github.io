@@ -1,0 +1,971 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="JavaScript,函数式编程," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="FEDT" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="函数式编程近期再度被热炒，各社区对函数式编程的讲解和推崇也是层出不穷。好像要是不知道函数式编程，就没法跟大佬们愉快的玩耍了。这一高大上的概念听起来似乎非常晦涩难懂让人摸不到头脑，然而实际上，也确实如此……本文记录对函数式编程密切相关的两个概念：柯里化与反柯里化的个人理解。 从函数式编程说起函数式编程有被称为函数范式，是">
+<meta name="keywords" content="JavaScript,函数式编程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="函数柯里化与反柯里化">
+<meta property="og:url" content="http://note.chenteng.me/2017/03/18/函数柯里化与反柯里化/index.html">
+<meta property="og:site_name" content="FEDT">
+<meta property="og:description" content="函数式编程近期再度被热炒，各社区对函数式编程的讲解和推崇也是层出不穷。好像要是不知道函数式编程，就没法跟大佬们愉快的玩耍了。这一高大上的概念听起来似乎非常晦涩难懂让人摸不到头脑，然而实际上，也确实如此……本文记录对函数式编程密切相关的两个概念：柯里化与反柯里化的个人理解。 从函数式编程说起函数式编程有被称为函数范式，是一种编程范式，一种编程思想。函数式的核心思想就是通过“纯函数”进行过程抽象，使代">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-12-04T16:24:29.199Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="函数柯里化与反柯里化">
+<meta name="twitter:description" content="函数式编程近期再度被热炒，各社区对函数式编程的讲解和推崇也是层出不穷。好像要是不知道函数式编程，就没法跟大佬们愉快的玩耍了。这一高大上的概念听起来似乎非常晦涩难懂让人摸不到头脑，然而实际上，也确实如此……本文记录对函数式编程密切相关的两个概念：柯里化与反柯里化的个人理解。 从函数式编程说起函数式编程有被称为函数范式，是一种编程范式，一种编程思想。函数式的核心思想就是通过“纯函数”进行过程抽象，使代">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: undefined,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> 函数柯里化与反柯里化 | FEDT </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?8f2986b20874420c3c5287985ba26855";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">FEDT</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">Front End Developer A-Ten's Blog</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-guestbook">
+          <a href="/guestbook" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-comments"></i> <br />
+            
+            留言
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                函数柯里化与反柯里化
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-03-18T01:01:27+00:00" content="2017-03-18">
+              2017-03-18
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/技术分享/" itemprop="url" rel="index">
+                    <span itemprop="name">技术分享</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+             <span id="/2017/03/18/函数柯里化与反柯里化/" class="leancloud_visitors" data-flag-title="函数柯里化与反柯里化">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+              &nbsp; | &nbsp;
+              <span class="page-pv"><i class="fa fa-file-o"></i>
+              <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+              </span>
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>函数式编程近期再度被热炒，各社区对函数式编程的讲解和推崇也是层出不穷。好像要是不知道函数式编程，就没法跟大佬们愉快的玩耍了。<br>这一高大上的概念听起来似乎非常晦涩难懂让人摸不到头脑，然而实际上，也确实如此……<br>本文记录对函数式编程密切相关的两个概念：柯里化与反柯里化的个人理解。</p>
+<h3 id="从函数式编程说起"><a href="#从函数式编程说起" class="headerlink" title="从函数式编程说起"></a>从函数式编程说起</h3><p>函数式编程有被称为函数范式，是一种编程范式，一种编程思想。<br>函数式的核心思想就是通过“纯函数”进行过程抽象，使代码逻辑清晰、降低耦合、便于维护。<br>这里出现了一个新概念：“纯函数”。纯函数即无状态、无副作用、幂等、无关时序的函数，指的是函数的输出完全由输入所决定，运行过程不依赖于系统的状态和上下文环境，运行过程不改变它作用域之外的环境状态。<br>而本文要说的柯里化(currying)与反柯里(uncurrying)化有什么关系呢？<br>柯里化和反柯里化是函数式编程的一个特性，是函数提纯的一种手段。<br><a id="more"></a></p>
+<h3 id="柯里化-currying"><a href="#柯里化-currying" class="headerlink" title="柯里化(currying)"></a>柯里化(currying)</h3><p>柯里化又称<em>部分求值</em>，维基百科上的定义：</p>
+<blockquote>
+<p>是把接受多个参数的函数变换成接受一个单一参数的函数，并且返回接受余下的参数并且返回结果的新函数的技术。 </p>
+</blockquote>
+<p>通俗来说就是不会立刻求值，而是到了需要的时候再去求值。<br>柯里化有3个常见作用：</p>
+<ol>
+<li>参数复用</li>
+<li>提前返回</li>
+<li>延迟计算/运行<h4 id="柯里化函数创建的步骤"><a href="#柯里化函数创建的步骤" class="headerlink" title="柯里化函数创建的步骤"></a>柯里化函数创建的步骤</h4></li>
+</ol>
+<p>柯里化函数一般由以下步骤动态创建：调用另一个函数并为它传入要柯里化的函数和必要参数。<br>下面是创建柯里化函数的通用方式：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 来自《JavaScript高级程序设计》22.1.5</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">curry</span>(<span class="params">fn</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> args = <span class="built_in">Array</span>.prototype.slice.call(<span class="built_in">arguments</span>, <span class="number">1</span>)</span><br><span class="line">  <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> innerArgs = <span class="built_in">Array</span>.prototype.slice.call(<span class="built_in">arguments</span>, <span class="number">1</span>)</span><br><span class="line">    <span class="keyword">var</span> finalArgs = args.concat(innerArgs)</span><br><span class="line">    <span class="keyword">return</span> fn.apply(<span class="literal">null</span>, finalArgs)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 测试用例</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">add</span>(<span class="params">num1, num2</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> num1 + num2</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> curriedAdd = curry(add, <span class="number">5</span>)</span><br><span class="line">alert(curridAdd(<span class="number">3</span>)) <span class="comment">// 8</span></span><br></pre></td></tr></table></figure></p>
+<p>以上函数就是一个简单的柯里化函数，被柯里化的函数只需传入部分值即可，因为部分参数已经保存在了柯里化函数返回的闭包中。</p>
+<h4 id="一个通用的柯里化函数实现："><a href="#一个通用的柯里化函数实现：" class="headerlink" title="一个通用的柯里化函数实现："></a>一个通用的柯里化函数实现：</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> curry = <span class="function"><span class="keyword">function</span> (<span class="params">fn</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> _args = []</span><br><span class="line">  <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> _fn(<span class="params"></span>) </span>&#123;</span><br><span class="line">     <span class="comment">// 如果没有传入参数就开始求值，</span></span><br><span class="line">     <span class="comment">// 否则将参数放入闭包_args中，并继续curring</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">arguments</span>.length === <span class="number">0</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> fn.apply(<span class="keyword">this</span>, _args)</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      [].push.apply(_args, <span class="built_in">arguments</span>)</span><br><span class="line">      <span class="keyword">return</span> _fn</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 测试用例</span></span><br><span class="line"><span class="keyword">var</span> plus = curry(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> result = <span class="number">0</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="built_in">arguments</span>.length; i++) &#123;</span><br><span class="line">    result += <span class="built_in">arguments</span>[i]</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> result</span><br><span class="line">&#125;)</span><br><span class="line">plus(<span class="number">1</span>)(<span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>)() <span class="comment">// 等价于plus(1, 2)(3, 4)() //10</span></span><br></pre></td></tr></table></figure>
+<p>以上函数是更为通用的柯里化函数。原理还是一样不断的往闭包中的<code>_args</code>数组中存放参数，。不同的是只要是传参调用<code>curried</code>函数，则返回函数本身用于下次继续调用，只在不传参的时候，才真正调用原函数并传递闭包中保存的所有参数（<code>_args</code>）。</p>
+<h3 id="反柯里化-uncurrying"><a href="#反柯里化-uncurrying" class="headerlink" title="反柯里化(uncurrying)"></a>反柯里化(uncurrying)</h3><p>柯里化(<code>currying</code>)是预先填入一些参数，目的是为了固定参数, 延迟计算等<br>反柯里化(<code>uncurrying</code>)就是把原来已经固定的参数或者this上下文等当作参数延迟到未来传递。  </p>
+<h4 id="反柯里化的三种实现"><a href="#反柯里化的三种实现" class="headerlink" title="反柯里化的三种实现"></a>反柯里化的三种实现</h4><p>反柯里化函数有三种实现，其中两种大同小异。  </p>
+<h4 id="第一种实现方法："><a href="#第一种实现方法：" class="headerlink" title="第一种实现方法："></a>第一种实现方法：</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 因为反柯里化只针对函数，所以直接将uncurrying放到Function原型对象上</span></span><br><span class="line"><span class="built_in">Function</span>.prototype.uncurrying = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> _that = <span class="keyword">this</span></span><br><span class="line">  <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">Function</span>.prototype.call.apply(_that, <span class="built_in">arguments</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>以上代码做了3件事：</p>
+<ul>
+<li>在<code>Function</code>原型上增加<code>uncurrying</code>方法，方便所有函数继承</li>
+<li>返回函数，即暴露方法对外的接口</li>
+<li>使用<code>call</code>将调用对象设置为原函数，并用<code>apply</code>将参数传入其中</li>
+</ul>
+<h4 id="第二种实现："><a href="#第二种实现：" class="headerlink" title="第二种实现："></a>第二种实现：</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Function</span>.prototype.uncurrying = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> _that = <span class="keyword">this</span></span><br><span class="line">  <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> _that.apply(<span class="built_in">arguments</span>[<span class="number">0</span>], <span class="built_in">Array</span>.prototype.slice.call(<span class="built_in">arguments</span>, <span class="number">1</span>))</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这种方式同上一种差不多，相比之下这种容易理解一点。<br>闭包中的<code>_taht</code>仍是原函数，返回的函数调用时直接利用<code>_that.apply</code>方法将调用时执行上下文换为传入的第一个参数。<br>结合一个例子看下：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> push = <span class="built_in">Array</span>.prototype.push.uncurrying() <span class="comment">// 被反柯里化的函数是数组的push方法</span></span><br><span class="line"><span class="keyword">var</span> obj = &#123; <span class="comment">// boj是一个类数组对象</span></span><br><span class="line">  <span class="number">0</span>: <span class="number">1</span>,</span><br><span class="line">  length: <span class="number">1</span></span><br><span class="line">&#125;</span><br><span class="line">push(obj, <span class="number">2</span>) <span class="comment">// &#123;0: 1, 1: 2, length: 2&#125;</span></span><br></pre></td></tr></table></figure></p>
+<p>可以看到本无<code>push</code>方法的<code>obj</code>对象被传入反柯里化的push方法中，成功的使用了数组的<code>push</code>方法<br>以上两种实现方法的核心是使用<code>call</code>或者<code>apply</code>来切换原函数调用时的上下文，使原函数能应用于原本没有该方法的对象。  </p>
+<h4 id="第三种实现方法"><a href="#第三种实现方法" class="headerlink" title="第三种实现方法"></a>第三种实现方法</h4><p>前两种实现都是借助<code>call</code>或<code>apply</code>来在调用过程中切换函数执行上下文实现。而在<code>ES5</code>中，提供了<code>bind</code>方法原生实现绑定执行上下文。<br>用<code>bind</code>实现反柯里化代码如下：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Function</span>.prototype.uncurrying = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">this</span>.call.bind(<span class="keyword">this</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>bind</code>返回一个已经绑定了执行上下文的函数<br>假设函数<code>fn</code>调用了<code>uncurrying</code>方法，将返回一个如下方法：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">Function</span>.prototype.call.apply(fn, <span class="built_in">arguments</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>可见效果是同第一种实现一样的。</p>
+<h4 id="反柯里化的例子"><a href="#反柯里化的例子" class="headerlink" title="反柯里化的例子"></a>反柯里化的例子</h4><p>前面已经有了一个<code>push</code>方法的例子，这里看看其他运用<code>uncurrying</code>的例子。<br>例一：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// uncurrying的使用</span></span><br><span class="line"><span class="keyword">var</span> person1 = &#123;</span><br><span class="line">  name: <span class="string">'Jack'</span>,</span><br><span class="line">  sayName: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.name</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> person2 = &#123;</span><br><span class="line">  name: <span class="string">'Tom'</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> sayName = person1.sayName.uncurrying()</span><br><span class="line">sayName(person2) <span class="comment">// 'Tom'</span></span><br></pre></td></tr></table></figure></p>
+<p>例二：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 反柯里化自身</span></span><br><span class="line"><span class="keyword">var</span> person1 = &#123;</span><br><span class="line">  name: <span class="string">'Jack'</span>,</span><br><span class="line">  sayName: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.name</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> person2 = &#123;</span><br><span class="line">  name: <span class="string">'Tom'</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> uncurrying = <span class="built_in">Function</span>.prototype.uncurrying.uncurrying()</span><br><span class="line"><span class="keyword">var</span> sayName = uncurrying(person1.sayName)</span><br><span class="line">sayName(person2) <span class="comment">// 'Tom'</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>柯里化和反柯里化作为函数范式的特征，都是很好的利用了高阶函数。引用一段我认为对柯里、反柯里化很好的理解：  </p>
+<blockquote>
+<p>柯里化体现的思想是”归一”, 多个参数化为一个参数, 然后逐个处理, 便于产生偏函数, 实现链式调用;<br>反柯里化体现的思想是”延伸”, 通过拓展方法的作用域, 使得它变得更通用, 提高了代码的复用性. 它们都提升了代码的优雅性.</p>
+</blockquote>
+<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><ul>
+<li><a href="https://www.h5jun.com/post/pure-function.html" target="_blank" rel="noopener">JavaScript 中的“纯函数”</a></li>
+<li><a href="https://www.h5jun.com/post/higher-order-function-play-with-pure-function.html" target="_blank" rel="noopener">高阶函数对系统的“提纯”</a></li>
+<li><a href="https://rockjins.js.org/2017/02/15/curring-uncurring/" target="_blank" rel="noopener">简单理解JavaScript中的柯里化和反柯里化</a></li>
+<li><a href="http://www.alloyteam.com/2013/08/javascript-zhong-you-qu-di-fan-ke-li-hua-ji-shu/#prettyPhoto" target="_blank" rel="noopener">Javascript中有趣的反柯里化技术</a></li>
+<li><a href="http://louiszhai.github.io/2015/12/16/currying/" target="_blank" rel="noopener">函数式编程之柯里化与反柯里化</a></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JavaScript/" rel="tag">#JavaScript</a>
+          
+            <a href="/tags/函数式编程/" rel="tag">#函数式编程</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/02/26/函数节流和函数防抖/" rel="next" title="函数节流(Throttling)和函数防抖(Debouncing)">
+                <i class="fa fa-chevron-left"></i> 函数节流(Throttling)和函数防抖(Debouncing)
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/12/01/Node.js中的事件循环与异步/" rel="prev" title="Node.js 中的事件循环（Event loop）与异步">
+                Node.js 中的事件循环（Event loop）与异步 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      
+        <div id="gitment-container"></div>
+      
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/logo.jpg"
+               alt="A-Ten" />
+          <p class="site-author-name" itemprop="name">A-Ten</p>
+          <p class="site-description motion-element" itemprop="description">带着孤寂，继续前进！</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">16</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/dota2mm/" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/ForKhazModan/" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.fedt.xin/" title="Vue博客" target="_blank" rel="external">Vue博客</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.deanhan.cn/" title="逐梦博客" target="_blank" rel="external">逐梦博客</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#从函数式编程说起"><span class="nav-number">1.</span> <span class="nav-text">从函数式编程说起</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#柯里化-currying"><span class="nav-number">2.</span> <span class="nav-text">柯里化(currying)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#柯里化函数创建的步骤"><span class="nav-number">2.1.</span> <span class="nav-text">柯里化函数创建的步骤</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#一个通用的柯里化函数实现："><span class="nav-number">2.2.</span> <span class="nav-text">一个通用的柯里化函数实现：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#反柯里化-uncurrying"><span class="nav-number">3.</span> <span class="nav-text">反柯里化(uncurrying)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#反柯里化的三种实现"><span class="nav-number">3.1.</span> <span class="nav-text">反柯里化的三种实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#第一种实现方法："><span class="nav-number">3.2.</span> <span class="nav-text">第一种实现方法：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#第二种实现："><span class="nav-number">3.3.</span> <span class="nav-text">第二种实现：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#第三种实现方法"><span class="nav-number">3.4.</span> <span class="nav-text">第三种实现方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#反柯里化的例子"><span class="nav-number">3.5.</span> <span class="nav-text">反柯里化的例子</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#总结"><span class="nav-number">3.6.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考资料"><span class="nav-number">4.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">A-Ten</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io" rel="external nofollow">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next" rel="external nofollow">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv"><i class="fa fa-user"></i><span class="busuanzi-value" id="busuanzi_value_site_uv"></span></span>
+  
+
+  
+    <span class="site-pv"><i class="fa fa-eye"></i><span class="busuanzi-value" id="busuanzi_value_site_pv"></span></span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+   
+   
+   
+   
+   <link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+   <script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+   
+       <script type="text/javascript">
+          var gitment = new Gitment({
+            id: document.location.href, 
+            owner: 'dota2mm',
+            repo: 'dota2mm.github.io',
+            oauth: {
+                client_id: 'b94978db8eba2c53213a',
+                client_secret: '0fde1a5ea1455717d0b02bb6144b730c20a37e03',
+            }});
+          gitment.render('gitment-container');
+       </script>
+   
+
+
+
+  
+  
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("4MUwWEGSYrnEix3z2S1XYe0D-gzGzoHsz", "joF9PNzXdE9OEUFRAQfJMqtO");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script type="text/javascript" async src="//push.zhanzhang.baidu.com/push.js">
+</script>
+
+
+</body>
+<script type="text/javascript">
+    (function(window,document,undefined){
+        var hearts = [];
+        window.requestAnimationFrame = (function(){
+                return window.requestAnimationFrame || 
+                           window.webkitRequestAnimationFrame ||
+                           window.mozRequestAnimationFrame ||
+                           window.oRequestAnimationFrame ||
+                           window.msRequestAnimationFrame ||
+                           function (callback){
+                                   setTimeout(callback,1000/60);
+                           }
+        })();
+        init();
+        function init(){
+                css(".heart{width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: fixed;}.heart:after{top: -5px;}.heart:before{left: -5px;}");
+                attachEvent();
+                gameloop();
+        }
+        function gameloop(){
+                for(var i=0;i<hearts.length;i++){
+                    if(hearts[i].alpha <=0){
+                            document.body.removeChild(hearts[i].el);
+                            hearts.splice(i,1);
+                            continue;
+                    }
+                    hearts[i].y--;
+                    hearts[i].scale += 0.004;
+                    hearts[i].alpha -= 0.013;
+                    hearts[i].el.style.cssText = "left:"+hearts[i].x+"px;top:"+hearts[i].y+"px;opacity:"+hearts[i].alpha+";transform:scale("+hearts[i].scale+","+hearts[i].scale+") rotate(45deg);background:"+hearts[i].color+";z-index:99999";
+            }
+            requestAnimationFrame(gameloop);
+        }
+        function attachEvent(){
+                var old = typeof window.onclick==="function" && window.onclick;
+                window.onclick = function(event){
+                        old && old();
+                        createHeart(event);
+                }
+        }
+        function createHeart(event){
+            var d = document.createElement("div");
+            d.className = "heart";
+            hearts.push({
+                    el : d,
+                    x : event.clientX - 5,
+                    y : event.clientY - 5,
+                    scale : 1,
+                    alpha : 1,
+                    color : randomColor()
+            });
+            document.body.appendChild(d);
+    }
+    function css(css){
+            var style = document.createElement("style");
+                style.type="text/css";
+                try{
+                    style.appendChild(document.createTextNode(css));
+                }catch(ex){
+                    style.styleSheet.cssText = css;
+                }
+                document.getElementsByTagName('head')[0].appendChild(style);
+    }
+        function randomColor(){
+                return "rgb("+(~~(Math.random()*255))+","+(~~(Math.random()*255))+","+(~~(Math.random()*255))+")";
+        }
+})(window,document);
+</script>
+</html>

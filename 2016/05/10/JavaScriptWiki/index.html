@@ -1,0 +1,993 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="JavaScript,原生JS," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="FEDT" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="reqeustAnimationFrame(RAF) 来自：MDN  概述window.requestAnimationFrame()这个方法是用来在页面重绘之前，通知浏览器调用一个指定的函数，以满足开发者操作动画的需求。这个方法接受一个函数为参，该函数会在重绘前调用。 注意: 如果想得到连贯的逐帧动画，函数中必须重新">
+<meta name="keywords" content="JavaScript,原生JS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript杂记(RAF,Selection,Scroll)">
+<meta property="og:url" content="http://note.chenteng.me/2016/05/10/JavaScriptWiki/index.html">
+<meta property="og:site_name" content="FEDT">
+<meta property="og:description" content="reqeustAnimationFrame(RAF) 来自：MDN  概述window.requestAnimationFrame()这个方法是用来在页面重绘之前，通知浏览器调用一个指定的函数，以满足开发者操作动画的需求。这个方法接受一个函数为参，该函数会在重绘前调用。 注意: 如果想得到连贯的逐帧动画，函数中必须重新调用 requestAnimationFrame()。 如果你想做逐帧动画的时候">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://developer.mozilla.org/@api/deki/files/840/=ScrollHeight.png">
+<meta property="og:image" content="https://developer.mozilla.org/@api/deki/files/842/=ScrollTop.png">
+<meta property="og:updated_time" content="2017-12-04T16:24:29.199Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JavaScript杂记(RAF,Selection,Scroll)">
+<meta name="twitter:description" content="reqeustAnimationFrame(RAF) 来自：MDN  概述window.requestAnimationFrame()这个方法是用来在页面重绘之前，通知浏览器调用一个指定的函数，以满足开发者操作动画的需求。这个方法接受一个函数为参，该函数会在重绘前调用。 注意: 如果想得到连贯的逐帧动画，函数中必须重新调用 requestAnimationFrame()。 如果你想做逐帧动画的时候">
+<meta name="twitter:image" content="https://developer.mozilla.org/@api/deki/files/840/=ScrollHeight.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: undefined,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> JavaScript杂记(RAF,Selection,Scroll) | FEDT </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?8f2986b20874420c3c5287985ba26855";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">FEDT</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">Front End Developer A-Ten's Blog</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-guestbook">
+          <a href="/guestbook" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-comments"></i> <br />
+            
+            留言
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                JavaScript杂记(RAF,Selection,Scroll)
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-05-10T14:55:16+00:00" content="2016-05-10">
+              2016-05-10
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/笔记整理/" itemprop="url" rel="index">
+                    <span itemprop="name">笔记整理</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+             <span id="/2016/05/10/JavaScriptWiki/" class="leancloud_visitors" data-flag-title="JavaScript杂记(RAF,Selection,Scroll)">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+              &nbsp; | &nbsp;
+              <span class="page-pv"><i class="fa fa-file-o"></i>
+              <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+              </span>
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="reqeustAnimationFrame-RAF"><a href="#reqeustAnimationFrame-RAF" class="headerlink" title="reqeustAnimationFrame(RAF)"></a><code>reqeustAnimationFrame(RAF)</code></h2><blockquote>
+<p>来自：<a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Window/cancelAnimationFrame" rel="noopener" target="_blank">MDN</a></p>
+</blockquote>
+<h4 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h4><p><strong>window.requestAnimationFrame()</strong>这个方法是用来在页面重绘之前，通知浏览器调用一个指定的函数，以满足开发者操作动画的需求。这个方法接受一个函数为参，该函数会在重绘前调用。</p>
+<p><strong>注意</strong>: 如果想得到连贯的逐帧动画，函数中必须重新调用 <code>requestAnimationFrame()</code>。</p>
+<p>如果你想做逐帧动画的时候，你应该用这个方法。这就要求你的动画函数执行会先于浏览器重绘动作。通常来说，被调用的频率是每秒60次，但是一般会遵循W3C标准规定的频率。如果是后台标签页面，重绘频率则会大大降低。</p>
+<p>回调函数只会被传入一个<code>DOMHighResTimeStamp</code>参数，这个参数指示当前被 <code>requestAnimationFrame</code> 序列化的函数队列被触发的时间。因为很多个函数在这一帧被执行，所以每个函数都将被传入一个相同的时间戳，尽管经过了之前很多的计算工作。这个数值是一个小数，单位毫秒，精确度在 10 µs。<br><a id="more"></a></p>
+<h4 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h4><p><strong>callback</strong><br>在每次需要重新绘制动画时,会调用这个参数所指定的函数。这个回调函数会收到一个参数，这个 <code>DOMHighResTimeStamp</code> 类型的参数指示当前时间距离开始触发 <code>requestAnimationFrame</code> 的回调的时间。</p>
+<h4 id="返回值"><a href="#返回值" class="headerlink" title="返回值"></a>返回值</h4><p><code>requestID</code> 是一个长整型非零值,作为一个唯一的标识符.你可以将该值作为参数传给 <code>window.cancelAnimationFrame()</code> 来取消这个回调函数。</p>
+<h4 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">window</span>.requestAnimationFrame = <span class="built_in">window</span>.requestAnimationFrame || <span class="built_in">window</span>.mozRequestAnimationFrame || <span class="built_in">window</span>.webkitRequestAnimationFrame || <span class="built_in">window</span>.msRequestAnimationFrame;</span><br><span class="line">    </span><br><span class="line"><span class="keyword">var</span> start = <span class="literal">null</span>;</span><br><span class="line"><span class="keyword">var</span> d = <span class="built_in">document</span>.getElementById(<span class="string">'SomeElementYouWantToAnimate'</span>);</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">step</span>(<span class="params">timestamp</span>) </span>&#123; </span><br><span class="line">  <span class="keyword">if</span> (start === <span class="literal">null</span>) start = timestamp;</span><br><span class="line">  <span class="keyword">var</span> progress = timestamp - start;</span><br><span class="line">  d.style.left = <span class="built_in">Math</span>.min(progress/<span class="number">10</span>, <span class="number">200</span>) + <span class="string">"px"</span>;</span><br><span class="line">  <span class="keyword">if</span> (progress &lt; <span class="number">2000</span>) &#123;</span><br><span class="line">      requestAnimationFrame(step);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">requestAnimationFrame(step);</span><br></pre></td></tr></table></figure>
+<h2 id="Selection对象"><a href="#Selection对象" class="headerlink" title="Selection对象"></a>Selection对象</h2><blockquote>
+<p>来源：<a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Selection" rel="noopener" target="_blank">MDN</a></p>
+</blockquote>
+<p>Selection对象一般由<code>window.getSelection()</code>或其他方法产生。它代表页面中的文本选区，可能横跨多个元素。文本选区由用户拖拽鼠标经过文字而产生。 如果你想了解关于其他容纳纯文本的表单元素中的选区操作，请参考 Input, TextArea 和 document.activeElement ，我们可以在这些页面元素中使用 window.getSelection()。</p>
+<p>Selection对象所对应的是用户所选择的 ranges （区域），俗称拖蓝。默认情况下，该函数只针对一个区域，我们可以这样使用这个函数：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> selObj = <span class="built_in">window</span>.getSelection();</span><br><span class="line"><span class="keyword">var</span> range  = selObj.getRangeAt(<span class="number">0</span>);</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>selObj 被赋予一个 Selection对象</li>
+<li>range 被赋予一个 Range 对象</li>
+</ul>
+<p>调用 <code>Selection/toString()</code> 方法会返回被选中区域中的<strong>纯文本</strong>。要求变量为字符串的函数会自动对对象进行该处理，例如：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> selObj = <span class="built_in">window</span>.getSelection();</span><br><span class="line"><span class="built_in">window</span>.alert(selObj);</span><br></pre></td></tr></table></figure></p>
+<h2 id="网页上的复制与剪切"><a href="#网页上的复制与剪切" class="headerlink" title="网页上的复制与剪切"></a>网页上的复制与剪切</h2><blockquote>
+<p>来自：<a href="http://zencode.in/17.%E7%BD%91%E9%A1%B5%E4%B8%8A%E7%9A%84%E5%A4%8D%E5%88%B6%E4%B8%8E%E5%89%AA%E5%88%87.html" rel="noopener" target="_blank">MZhou’s blog</a></p>
+</blockquote>
+<p>IE 10及以上的版本修改了Document.execCommand()方法，增加了对剪切和复制的支持。Chrome从43版本开始也支持了这项特性。</p>
+<p>当选中了浏览器中的任意文本，只要执行这个方法就可以剪切或拷贝这段文字。有了这个API后，选中一段文字并拷贝会变的非常简单。</p>
+<p>这个API和Selection API一起使用时将会变的特别有用。你可以决定哪些文本被复制到剪切版。之后我们会详细阐述。</p>
+<h4 id="一个简单的例子"><a href="#一个简单的例子" class="headerlink" title="一个简单的例子"></a>一个简单的例子</h4><p>让我们来增加一个按钮，点击这个按钮会拷贝一个email地址到用户的剪切版。</p>
+<p>我们在网页里面添加一个email地址和一个按钮，点击按钮会拷贝email地址：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;p&gt;Email me at &lt;a <span class="class"><span class="keyword">class</span></span>=<span class="string">"js-emaillink"</span> href=<span class="string">"mailto:matt@example.co.uk"</span>&gt;matt@example.co.uk&lt;<span class="regexp">/a&gt;&lt;/</span>p&gt;</span><br><span class="line">&lt;p&gt;<span class="xml"><span class="tag">&lt;<span class="name">button</span> <span class="attr">class</span>=<span class="string">"js-emailcopybtn"</span>&gt;</span><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">"./images/copy-icon.png"</span> /&gt;</span><span class="tag">&lt;/<span class="name">button</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br></pre></td></tr></table></figure></p>
+<p>接下来在Javascript中，我们增加一个click事件监听器到按钮上。在事件监听器中我们通过class js-emaillink选中email地址，然后执行拷贝命令，然后用户的剪切版里面就会有email地址了。然后我们取消选中email地址，这样用户就不会见到文本被选中。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> copyEmailBtn = <span class="built_in">document</span>.querySelector(<span class="string">'.js-emailcopybtn'</span>);</span><br><span class="line">copyEmailBtn.addEventListener(<span class="string">'click'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">event</span>) </span>&#123;</span><br><span class="line"><span class="comment">// Select the email link anchor text</span></span><br><span class="line"><span class="keyword">var</span> emailLink = <span class="built_in">document</span>.querySelector(<span class="string">'.js-emaillink'</span>);</span><br><span class="line"><span class="keyword">var</span> range = <span class="built_in">document</span>.createRange();</span><br><span class="line">range.selectNode(emailLink);</span><br><span class="line"><span class="built_in">window</span>.getSelection().addRange(range);</span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">	<span class="comment">// Now that we've selected the anchor text, execute the copy command</span></span><br><span class="line">	<span class="keyword">var</span> successful = <span class="built_in">document</span>.execCommand(<span class="string">'copy'</span>);</span><br><span class="line">	<span class="keyword">var</span> msg = successful ? <span class="string">'successful'</span> : <span class="string">'unsuccessful'</span>;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">'Copy email command was '</span> + msg);</span><br><span class="line">&#125; <span class="keyword">catch</span>(err) &#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">'Oops, unable to copy'</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Remove the selections - <span class="doctag">NOTE:</span> Should use</span></span><br><span class="line"><span class="comment">// removeRange(range) when it is supported</span></span><br><span class="line"><span class="built_in">window</span>.getSelection().removeAllRanges();</span><br></pre></td></tr></table></figure></p>
+<p>如上代码中使用了<a href="https://developer.mozilla.org/en-US/docs/Web/API/Selection" rel="noopener" target="_blank">Selection API</a>的<a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/getSelection" rel="noopener" target="_blank">window.getSelection()</a>方法选中链接的文本。在document.execCommand()方法后，我们可以通过调用window.getSelection().removeAllRanges()方法来移除选中。如果你想检查拷贝是否成功，那么你可以checkdocument.execCommand();的返回值。如果返回false那么表示不支持拷贝或者不能使用（没有选中文本）。我们将execCommand()放到try catch里面执行是为了确保一些极端情况下浏览器会抛出错误。</p>
+<p>剪切命令可以在文本框中使用。你可以移除文本输入框中的文字并放到剪切版中使用。</p>
+<p>在HTML中添加一个textarea和一个按钮：<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span><span class="tag">&lt;<span class="name">textarea</span> <span class="attr">class</span>=<span class="string">"js-cuttextarea"</span>&gt;</span>Hello I'm some text<span class="tag">&lt;/<span class="name">textarea</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span><span class="tag">&lt;<span class="name">button</span> <span class="attr">class</span>=<span class="string">"js-textareacutbtn"</span> <span class="attr">disable</span>&gt;</span>Cut Textarea<span class="tag">&lt;/<span class="name">button</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>我们可以这么写js：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> cutTextareaBtn = <span class="built_in">document</span>.querySelector(<span class="string">'.js-textareacutbtn'</span>);</span><br><span class="line">cutTextareaBtn.addEventListener(<span class="string">'click'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">event</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> cutTextarea = <span class="built_in">document</span>.querySelector(<span class="string">'.js-cuttextarea'</span>);</span><br><span class="line">    cutTextarea.select();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">var</span> successful = <span class="built_in">document</span>.execCommand(<span class="string">'cut'</span>);</span><br><span class="line">        <span class="keyword">var</span> msg = successful ? <span class="string">'successful'</span> : <span class="string">'unsuccessful'</span>;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'Cutting text command was '</span> + msg);</span><br><span class="line">    &#125; <span class="keyword">catch</span>(err) &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'Oops, unable to cut'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<h4 id="queryCommandSupported和queryCommandEnabled"><a href="#queryCommandSupported和queryCommandEnabled" class="headerlink" title="queryCommandSupported和queryCommandEnabled"></a>queryCommandSupported和queryCommandEnabled</h4><p>在调用 document.execCommand() 之前你应该确认这个API是否被所在浏览器支持。这时候你可以用 document.queryCommandSupported() 方法来确认是否支持。在上面的例子中，我们可以在浏览器不支持时将按钮设置为disabled。具体代码如下：</p>
+<p><code>copyEmailBtn.disabled = !document.queryCommandSupported(&#39;copy&#39;);</code></p>
+<p>document.queryCommandSupported())和document.queryCommandEnabled())的区别是：前者检测浏览器是否支持剪切或拷贝，后者检测是否有选中的文本用于剪切或拷贝。这在让用户选中文本的情况（不用Selection API）下比较有用。如果没有选中的文本，你可以显示一个消息给用户，这样更加友好～</p>
+<h4 id="浏览器支持情况"><a href="#浏览器支持情况" class="headerlink" title="浏览器支持情况"></a>浏览器支持情况</h4><p>IE 10+、Chrome 43+和Opera 29+ 已经支持了这些命令。<br>Firefox虽然已经支持了这些命令，但是需要修改下首选项（<a href="https://developer.mozilla.org/en-US/docs/Web/API/Document/execCommand" rel="noopener" target="_blank">具体看这里</a>)。如果没有修改首选项，那么Firefox会抛出一个错误。<br>Safari目前不支持这些命令。</p>
+<h4 id="已知问题"><a href="#已知问题" class="headerlink" title="已知问题"></a>已知问题</h4><p>直接用js代码调用 queryCommandSupported() 会一定会返回false，除非将其放在用户操作的回调函数中执行。这导致了你不能在浏览器不支持时禁用按钮。<br>在devtools中调用 queryCommandSupported() 一定会返回false。<br>目前剪切命令只在你用js选中文本时起作用。</p>
+<h3 id="附：copy事件"><a href="#附：copy事件" class="headerlink" title="附：copy事件"></a>附：copy事件</h3><p>The copy event is fired when the user initiates a copy action through the browser UI (for example, using the CTRL/Cmd+C keyboard shortcut or selecting the “Copy” from the menu) and in response to an allowed <a href="https://developer.mozilla.org/en-US/docs/Web/API/Document/execCommand" rel="noopener" target="_blank">document.execCommand(‘copy’)</a> call.<br>A handler for this event can modify the provided ClipboardEvent.clipboardData object by calling setData(format, data):<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">document</span>.addEventListener(<span class="string">'copy'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">e</span>)</span>&#123;</span><br><span class="line">    e.clipboardData.setData(<span class="string">'text/plain'</span>, <span class="string">'Hello, world!'</span>);</span><br><span class="line">    e.clipboardData.setData(<span class="string">'text/html'</span>, <span class="string">'&lt;b&gt;Hello, world!&lt;/b&gt;'</span>);</span><br><span class="line">    e.preventDefault(); <span class="comment">// We want our data, not data from any selection, to be written to the clipboard</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<p>A handler for this event cannot read the clipboard data using <code>clipboardData.getData()</code>.</p>
+<h2 id="scrollHeight-clientHeight-scrollTop"><a href="#scrollHeight-clientHeight-scrollTop" class="headerlink" title="scrollHeight,clientHeight,scrollTop"></a><code>scrollHeight</code>,<code>clientHeight</code>,<code>scrollTop</code></h2><blockquote>
+<p>来源：<br><a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Element/scrollHeight" rel="noopener" target="_blank">MDN-Element.scrollHeight</a><br><a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Element/clientHeight" rel="noopener" target="_blank">MDN-Element.clientHeight</a><br><a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Element/scrollTop" rel="noopener" target="_blank">MDN-Element.scrollTop</a></p>
+</blockquote>
+<h3 id="Element-scrollHeight"><a href="#Element-scrollHeight" class="headerlink" title="Element.scrollHeight"></a>Element.scrollHeight</h3><p><code>Element.scrollHeight</code> 是计量元素内容高度的<strong>只读属性</strong>，包括<code>overflow</code>样式属性导致的视图中不可见内容。没有垂直滚动条的情况下，<code>scrollHeight</code>值与元素视图填充所有内容所需要的最小值<code>clientHeight</code>相同。包括元素的<code>padding</code>，但不包括元素的<code>margin</code>.</p>
+<blockquote>
+<p>属性将会对值四舍五入取整。如果需要小数值，使用Element.getBoundingClientRect().</p>
+</blockquote>
+<h4 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> intElemScrollHeight = <span class="built_in">document</span>.getElementById(id_attribute_value).scrollHeight;</span><br></pre></td></tr></table></figure>
+<p>intElemScrollHeight 存储着与元素scrollHeight像素值对应的一个整数。scrollHeight是一个只读属性。<br><img src="https://developer.mozilla.org/@api/deki/files/840/=ScrollHeight.png" alt="scrollHeight图解"></p>
+<h4 id="判定元素是否滚动到底"><a href="#判定元素是否滚动到底" class="headerlink" title="判定元素是否滚动到底"></a>判定元素是否滚动到底</h4><p>如果元素滚动到底，下面等式返回true，没有则返回false.<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">element.scrollHeight - element.scrollTop === element.clientHeight</span><br></pre></td></tr></table></figure></p>
+<h4 id="scrollHeight-演示"><a href="#scrollHeight-演示" class="headerlink" title="scrollHeight 演示"></a>scrollHeight 演示</h4><p>监听onscroll事件，这个等式可以用来判定用户是否阅读过文本。（参考 <code>element.scrollTop</code> 和 <code>element.clientHeight</code>属性）。例如：<a href="http://jsbin.com/zeqohi/edit?html,css,js" rel="noopener" target="_blank">scrollHeight 演示</a></p>
+<h3 id="Element-clientHeight"><a href="#Element-clientHeight" class="headerlink" title="Element.clientHeight"></a>Element.clientHeight</h3><p>返回元素内部的高度(单位像素)，包含<strong>内边距</strong>，但不包括水平滚动条、边框和外边距。</p>
+<p><code>clientHeight</code> 可以通过 <code>CSS height</code> + <code>CSS padding</code> - <code>水平滚动条高度</code> (如果存在)来计算.</p>
+<h4 id="语法-1"><a href="#语法-1" class="headerlink" title="语法"></a>语法</h4><p><code>var h = element.clientHeight;</code><br>返回<strong>整数 h</strong>，表示 element 的 clientHeight（单位像素）。<br>clientHeight 是<code>只读</code>的.</p>
+<h3 id="Element-scrollTop"><a href="#Element-scrollTop" class="headerlink" title="Element.scrollTop"></a>Element.scrollTop</h3><p>这个<code>Element.scrollTop</code> 属性可以设置或者获取一个元素距离他<strong>容器顶部</strong>的像素距离。一个元素的 <code>scrollTop</code> 是可以去计算出这个元素距离它容器顶部的可见高度。当一个元素的容器没有产生垂直方向的滚动条,那它的 scrollTop 的值默认为0.</p>
+<h4 id="语法-2"><a href="#语法-2" class="headerlink" title="语法"></a>语法</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 获得滚动的距离</span><br><span class="line">var  intElemScrollTop = someElement.scrollTop;</span><br></pre></td></tr></table></figure>
+<p>运行下面的代码, 可以去给一个元素设置一个正确的像素整型数值，如果element的容器已经被滚动了.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 设置滚动的距离</span><br><span class="line">element.scrollTop = intValue;</span><br></pre></td></tr></table></figure></p>
+<p>scrollTop可以被设置任何的整数, 但以下情况会报错:</p>
+<ul>
+<li>如果一个元素不能被滚动 (e.g. 它没有溢出容器或者 这个元素是不可滚动的), scrollTop被设置为0.</li>
+<li>设置scrollTop的值小于0，scrollTop 被设为0</li>
+<li>如果设置了超出这个容器可滚动的值, scrollTop 会被设为最大值.<br><img src="https://developer.mozilla.org/@api/deki/files/842/=ScrollTop.png" alt="scrollTop图解"></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JavaScript/" rel="tag">#JavaScript</a>
+          
+            <a href="/tags/原生JS/" rel="tag">#原生JS</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/05/09/ASP.NET MVC/" rel="next" title="ASP.NET MVC摸索">
+                <i class="fa fa-chevron-left"></i> ASP.NET MVC摸索
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/05/13/JS设计模式系列01/" rel="prev" title="JavaScript设计模式学习笔记1">
+                JavaScript设计模式学习笔记1 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox">
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+    <a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a>
+    <a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+    <a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a class="bds_count" data-cmd="count"></a>
+  </div>
+  <script>
+    window._bd_share_config = {
+      "common": {
+        "bdText": "",
+        "bdMini": "2",
+        "bdMiniList": false,
+        "bdPic": ""
+      },
+      "share": {
+        "bdSize": "16",
+        "bdStyle": "0"
+      },
+      "image": {
+        "viewList": ["tsina", "douban", "sqq", "qzone", "weixin", "twi", "fbook"],
+        "viewText": "分享到：",
+        "viewSize": "16"
+      }
+    }
+  </script>
+
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      
+        <div id="gitment-container"></div>
+      
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/logo.jpg"
+               alt="A-Ten" />
+          <p class="site-author-name" itemprop="name">A-Ten</p>
+          <p class="site-description motion-element" itemprop="description">带着孤寂，继续前进！</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">16</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/dota2mm/" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/ForKhazModan/" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.fedt.xin/" title="Vue博客" target="_blank" rel="external">Vue博客</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.deanhan.cn/" title="逐梦博客" target="_blank" rel="external">逐梦博客</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#reqeustAnimationFrame-RAF"><span class="nav-number">1.</span> <span class="nav-text">reqeustAnimationFrame(RAF)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#概述"><span class="nav-number">1.0.1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#参数"><span class="nav-number">1.0.2.</span> <span class="nav-text">参数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#返回值"><span class="nav-number">1.0.3.</span> <span class="nav-text">返回值</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#例子"><span class="nav-number">1.0.4.</span> <span class="nav-text">例子</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Selection对象"><span class="nav-number">2.</span> <span class="nav-text">Selection对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#网页上的复制与剪切"><span class="nav-number">3.</span> <span class="nav-text">网页上的复制与剪切</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#一个简单的例子"><span class="nav-number">3.0.1.</span> <span class="nav-text">一个简单的例子</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#queryCommandSupported和queryCommandEnabled"><span class="nav-number">3.0.2.</span> <span class="nav-text">queryCommandSupported和queryCommandEnabled</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#浏览器支持情况"><span class="nav-number">3.0.3.</span> <span class="nav-text">浏览器支持情况</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#已知问题"><span class="nav-number">3.0.4.</span> <span class="nav-text">已知问题</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#附：copy事件"><span class="nav-number">3.1.</span> <span class="nav-text">附：copy事件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#scrollHeight-clientHeight-scrollTop"><span class="nav-number">4.</span> <span class="nav-text">scrollHeight,clientHeight,scrollTop</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Element-scrollHeight"><span class="nav-number">4.1.</span> <span class="nav-text">Element.scrollHeight</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#语法"><span class="nav-number">4.1.1.</span> <span class="nav-text">语法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#判定元素是否滚动到底"><span class="nav-number">4.1.2.</span> <span class="nav-text">判定元素是否滚动到底</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#scrollHeight-演示"><span class="nav-number">4.1.3.</span> <span class="nav-text">scrollHeight 演示</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Element-clientHeight"><span class="nav-number">4.2.</span> <span class="nav-text">Element.clientHeight</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#语法-1"><span class="nav-number">4.2.1.</span> <span class="nav-text">语法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Element-scrollTop"><span class="nav-number">4.3.</span> <span class="nav-text">Element.scrollTop</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#语法-2"><span class="nav-number">4.3.1.</span> <span class="nav-text">语法</span></a></li></ol></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">A-Ten</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io" rel="external nofollow">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next" rel="external nofollow">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv"><i class="fa fa-user"></i><span class="busuanzi-value" id="busuanzi_value_site_uv"></span></span>
+  
+
+  
+    <span class="site-pv"><i class="fa fa-eye"></i><span class="busuanzi-value" id="busuanzi_value_site_pv"></span></span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+   
+   
+   
+   
+   <link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+   <script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+   
+       <script type="text/javascript">
+          var gitment = new Gitment({
+            id: document.location.href, 
+            owner: 'dota2mm',
+            repo: 'dota2mm.github.io',
+            oauth: {
+                client_id: 'b94978db8eba2c53213a',
+                client_secret: '0fde1a5ea1455717d0b02bb6144b730c20a37e03',
+            }});
+          gitment.render('gitment-container');
+       </script>
+   
+
+
+
+  
+  
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("4MUwWEGSYrnEix3z2S1XYe0D-gzGzoHsz", "joF9PNzXdE9OEUFRAQfJMqtO");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script type="text/javascript" async src="//push.zhanzhang.baidu.com/push.js">
+</script>
+
+
+</body>
+<script type="text/javascript">
+    (function(window,document,undefined){
+        var hearts = [];
+        window.requestAnimationFrame = (function(){
+                return window.requestAnimationFrame || 
+                           window.webkitRequestAnimationFrame ||
+                           window.mozRequestAnimationFrame ||
+                           window.oRequestAnimationFrame ||
+                           window.msRequestAnimationFrame ||
+                           function (callback){
+                                   setTimeout(callback,1000/60);
+                           }
+        })();
+        init();
+        function init(){
+                css(".heart{width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: fixed;}.heart:after{top: -5px;}.heart:before{left: -5px;}");
+                attachEvent();
+                gameloop();
+        }
+        function gameloop(){
+                for(var i=0;i<hearts.length;i++){
+                    if(hearts[i].alpha <=0){
+                            document.body.removeChild(hearts[i].el);
+                            hearts.splice(i,1);
+                            continue;
+                    }
+                    hearts[i].y--;
+                    hearts[i].scale += 0.004;
+                    hearts[i].alpha -= 0.013;
+                    hearts[i].el.style.cssText = "left:"+hearts[i].x+"px;top:"+hearts[i].y+"px;opacity:"+hearts[i].alpha+";transform:scale("+hearts[i].scale+","+hearts[i].scale+") rotate(45deg);background:"+hearts[i].color+";z-index:99999";
+            }
+            requestAnimationFrame(gameloop);
+        }
+        function attachEvent(){
+                var old = typeof window.onclick==="function" && window.onclick;
+                window.onclick = function(event){
+                        old && old();
+                        createHeart(event);
+                }
+        }
+        function createHeart(event){
+            var d = document.createElement("div");
+            d.className = "heart";
+            hearts.push({
+                    el : d,
+                    x : event.clientX - 5,
+                    y : event.clientY - 5,
+                    scale : 1,
+                    alpha : 1,
+                    color : randomColor()
+            });
+            document.body.appendChild(d);
+    }
+    function css(css){
+            var style = document.createElement("style");
+                style.type="text/css";
+                try{
+                    style.appendChild(document.createTextNode(css));
+                }catch(ex){
+                    style.styleSheet.cssText = css;
+                }
+                document.getElementsByTagName('head')[0].appendChild(style);
+    }
+        function randomColor(){
+                return "rgb("+(~~(Math.random()*255))+","+(~~(Math.random()*255))+","+(~~(Math.random()*255))+")";
+        }
+})(window,document);
+</script>
+</html>
