@@ -251,8 +251,8 @@ mathjax:
 # Baidu Share
 # Available value:
 #    button | slide
-#baidushare:
-##  type: button
+baidushare:
+ type: button
 
 # Share
 #jiathis:
@@ -277,11 +277,11 @@ mathjax:
 # user_id must NOT be null when admin_enable is true!
 # you can visit http://dev.duoshuo.com get duoshuo user id.
 duoshuo_info:
-  ua_enable: true
-  admin_enable: true
+  ua_enable: false
+  admin_enable: false
   user_id: 6259690702712604000
   admin_nickname: <i class="fa fa-vimeo"></i>
-duoshuo_share: true
+duoshuo_share: false
 
 # Facebook SDK Support.
 # https://github.com/iissnan/hexo-theme-next/pull/410
@@ -291,6 +291,17 @@ facebook_sdk:
   fb_admin:     #<user_id>
   like_button:  #true
   webmaster:    #true
+
+# Gitment
+# Introduction: https://imsun.net/posts/gitment-introduction/
+gitment:
+  enable: true
+  id: 
+  owner: dota2mm
+  repo: dota2mm.github.io
+  cid: b94978db8eba2c53213a
+  cs: 0fde1a5ea1455717d0b02bb6144b730c20a37e03
+  lazy: false
 
 
 # Show number of visitors to each article.
@@ -304,7 +315,7 @@ leancloud_visitors:
 # Get more information on http://ibruce.info/2015/04/04/busuanzi/
 busuanzi_count:
   # count values only if the other configs are false
-  enable: false
+  enable: true
   # custom uv span for the whole site
   site_uv: true
   site_uv_header: <i class="fa fa-user"></i>

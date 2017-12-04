@@ -10,5 +10,5 @@ Disallow: /fonts/
 Disallow: /vendors/
 Disallow: /fancybox/
 
-Sitemap: http://pages.fedt.xin/sitemap.xml
-Sitemap: http://pages.fedt.xin/baidusitemap.xml
+Sitemap: http://note.chenteng.me/sitemap.xml
+Sitemap: http://note.chenteng.me/baidusitemap.xml

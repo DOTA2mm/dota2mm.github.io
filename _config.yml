@@ -12,7 +12,7 @@ timezone:
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: http://pages.fedt.xin
+url: http://note.chenteng.me
 root: /
 permalink: :year/:month/:day/:title/
 permalink_defaults:
@@ -76,7 +76,7 @@ deploy:
 
 # 多说评论框
 duoshuo_shortname: "fedt"
-duoshuo_share: true
+duoshuo_share: false
 duoshuo_hotartical: false
 
 #avatar
